@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title>فقرات الحفلة</title>
+  <style>
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: linear-gradient(135deg, #74ebd5, #ACB6E5);
+      min-height: 100vh;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      direction: rtl;
+    }
+
+    .container {
+      background: #fff;
+      padding: 25px;
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+      max-width: 400px;
+      width: 90%;
+    }
+
+    h2, h3 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    .btn {
+      display: block;
+      width: 100%;
+      margin: 10px 0;
+      padding: 15px;
+      font-size: 18px;
+      font-weight: bold;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background: #4facfe;
+      color: white;
+    }
+
+    .btn:hover:not(:disabled) {
+      background: #00f2fe;
+      transform: scale(1.05);
+    }
+
+    .btn:disabled {
+      background: #ddd;
+      color: #888;
+      cursor: not-allowed;
+    }
+
+    #result {
+      margin-top: 20px;
+      font-size: 20px;
+      padding: 15px;
+      background: #f9f9f9;
+      border-radius: 12px;
+      box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
+      color: #222;
+      min-height: 50px;
+    }
+
+    /* انيميشن لفت الانتباه */
+    .flash {
+      animation: flash 1s infinite alternate;
+    }
+
+    @keyframes flash {
+      from { background: #4facfe; }
+      to { background: #00f2fe; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>🎉 اختار فريقك 🎉</h2>
+    <div id="teamSelect">
+      <button class="btn" onclick="selectTeam(1)">فريق 1</button>
+      <button class="btn" onclick="selectTeam(2)">فريق 2</button>
+      <button class="btn" onclick="selectTeam(3)">فريق 3</button>
+    </div>
+
+    <div id="game" style="display:none;">
+      <h3 id="teamTitle"></h3>
+      <div id="buttons"></div>
+      <div id="result"></div>
+    </div>
+  </div>
+
+  <script>
+    const teamTasks = {
+      1: ["📍 ترنيمة في القاعة مع مس تريز","📍 لعبة في الارض مع مس ميرنا","📍 كلمة في الكنيسة الكبيرة مع انكل مينا","📍 فقرة في مكان ما","📍 فقرة تاني","📍 فقرة مفاجأة في البلكونة"],
+      2: ["📍 فقرة تاني","📍 فقرة في مكان ما","📍 ترنيمة في القاعة مع مس تريز","📍 لعبة في الارض مع مس ميرنا","📍 فقرة مفاجأة في البلكونة","📍 كلمة في الكنيسة الكبيرة مع انكل مينا"],
+      3: ["📍 لعبة في الارض مع مس ميرنا","📍 كلمة في الكنيسة الكبيرة مع انكل مينا","📍 فقرة مفاجأة في البلكونة","📍 ترنيمة في القاعة مع مس تريز","📍 فقرة تاني","📍 فقرة في مكان ما"]
+    };
+
+    let currentIndex = 0;
+    let currentTeam = null;
+    const delayMinutes = 1; // ⬅️ غير الرقم هنا لو عايز دقيقتين (2)
+
+    function selectTeam(teamId) {
+      currentTeam = teamId;
+      currentIndex = 0;
+      document.querySelector("h2").style.display = "none";
+      document.getElementById("teamSelect").style.display = "none";
+      document.getElementById("game").style.display = "block";
+      document.getElementById("teamTitle").innerText = "فريق " + teamId;
+      loadTasks(teamTasks[teamId]);
+    }
+
+    function loadTasks(tasks) {
+      const btnContainer = document.getElementById("buttons");
+      btnContainer.innerHTML = "";
+      tasks.forEach((task, i) => {
+        const btn = document.createElement("button");
+        btn.className = "btn";
+        btn.innerText = "فقرة " + (i+1);
+        btn.disabled = (i !== currentIndex);
+        if (i === currentIndex) btn.classList.add("flash"); // الزرار الحالي يلمع
+        btn.onclick = () => chooseTask(task, btn, i, tasks);
+        btnContainer.appendChild(btn);
+      });
+    }
+
+    function chooseTask(task, btn, index, tasks) {
+      if (index === currentIndex && !btn.disabled) {
+        document.getElementById("result").innerText = task;
+
+        // قفل الزرار الحالي
+        btn.disabled = true;
+        btn.classList.remove("flash");
+
+        // جهّز للزرار اللي بعده
+        currentIndex++;
+        if (currentIndex < tasks.length) {
+          const allButtons = document.querySelectorAll("#buttons button");
+          setTimeout(() => {
+            allButtons[currentIndex].disabled = false;
+            allButtons[currentIndex].classList.add("flash");
+          }, delayMinutes * 60000);
+        }
+      } else {
+        alert("🚫 لازم تستنى دورك!");
+      }
+    }
+  </script>
+</body>
+</html>

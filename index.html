@@ -103,7 +103,7 @@
 
     let currentIndex = 0;
     let currentTeam = null;
-    const delayMinutes = 1; // ⬅️ غير الرقم هنا لو عايز دقيقتين (2)
+    // const delayMinutes = 1; // ⬅️ غير الرقم هنا لو عايز دقيقتين (2)
 
     function selectTeam(teamId) {
       currentTeam = teamId;
@@ -144,10 +144,10 @@
           setTimeout(() => {
             allButtons[currentIndex].disabled = false;
             allButtons[currentIndex].classList.add("flash");
-          }, delayMinutes * 60000);
+          })
         }
-      } else {
-        alert("🚫 لازم تستنى دورك!");
+      // } else {
+      //   alert("🚫 لازم تستنى دورك!");
       }
     }
   </script>
